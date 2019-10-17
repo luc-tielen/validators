@@ -12,7 +12,6 @@ extra-source-files:
 
 dependencies:
   - base >= 3 && < 5
-  - validation >= 1.1
 
 # TODO cleanup
 ghc-options:
@@ -26,12 +25,10 @@ ghc-options:
   - -Wno-type-defaults
   - -Wno-missing-local-signatures
   - -Wno-monomorphism-restriction
-  - -Wno-missing-deriving-strategies
   - -optP-Wno-nonportable-include-path
   - -fhide-source-paths
   - -fno-show-valid-hole-fits
   - -fno-sort-valid-hole-fits
-  - -O0
 
 library:
   source-dirs:        lib

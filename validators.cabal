@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 79389476f64af6759797bdf92a9c9a3a8ba6cb1ec8461d0da463361e1697729b
+-- hash: 3991142fe7edf5e524cccfb93028f4bcf94e3751678cc093761562aeabc4386d
 
 name:           validators
 version:        0.0.1
@@ -21,6 +21,8 @@ extra-source-files:
     LICENSE
 
 library
+  exposed-modules:
+      Data.Validation
   other-modules:
       Paths_validators
   hs-source-dirs:
