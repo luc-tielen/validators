@@ -12,5 +12,7 @@ test:
 repl:
 	@cabal new-repl
 
+lint:
+	@hlint .
 
-.PHONY: build configure test repl
+.PHONY: build configure test repl lint
