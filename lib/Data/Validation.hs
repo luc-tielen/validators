@@ -1,7 +1,7 @@
 
 module Data.Validation
   ( Valid
-  , Validation(..)
+  , Validation
   , Validator
   , fromValid
   , check
@@ -11,6 +11,8 @@ module Data.Validation
 
 import Prelude
 
+
+-- | Wrapper type indicating this is a validated data type
 newtype Valid a = Valid { fromValid :: a }
   deriving (Eq, Show)
 
@@ -22,6 +24,7 @@ instance Applicative Valid where
 
   Valid f <*> Valid a = Valid $ f a
 
+-- | Used for combining multiple validators together
 data Validation e a
   = Failure e
   | Success a
@@ -57,11 +60,13 @@ check p e a =
     then Ok
     else Err e
 
+-- | Runs the validators on a single subject
 validate :: Validator e a -> a -> Validation e a
 validate f a = case f a of
   Err e -> Failure e
   Ok -> Success a
 
+-- TODO rename
 runValidation :: Validation e a -> Either e (Valid a)
 runValidation (Failure e) = Left e
 runValidation (Success a) = Right $ Valid a

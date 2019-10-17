@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3991142fe7edf5e524cccfb93028f4bcf94e3751678cc093761562aeabc4386d
+-- hash: 95ba095532f05d55f2662deab75fa75d28871a29ee62d4ba92d6d03e6d19bf91
 
 name:           validators
 version:        0.0.1
@@ -27,23 +27,22 @@ library
       Paths_validators
   hs-source-dirs:
       lib
-  ghc-options: -Wall -Weverything -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-deriving-strategies -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O0
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
   build-depends:
       base >=3 && <5
-    , validation >=1.1
   default-language: Haskell2010
 
 test-suite validators-test
   type: exitcode-stdio-1.0
   main-is: test.hs
   other-modules:
+      Data.ValidationSpec
       Paths_validators
   hs-source-dirs:
       tests
-  ghc-options: -Wall -Weverything -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-deriving-strategies -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O0
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
   build-depends:
       base >=3 && <5
     , hspec >=2.6.1 && <3.0.0
-    , validation >=1.1
     , validators
   default-language: Haskell2010

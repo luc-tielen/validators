@@ -17,6 +17,7 @@ dependencies:
 ghc-options:
   - -Wall
   - -Weverything
+  - -Wno-implicit-prelude
   - -Wno-safe
   - -Wno-unsafe
   - -Wno-missed-specializations
