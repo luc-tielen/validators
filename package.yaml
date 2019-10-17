@@ -1,0 +1,46 @@
+name:                validators
+version:             0.0.1
+homepage:            https://github.com/luc-tielen/validators#README.md
+license:             MIT
+author:              Luc Tielen
+maintainer:          luc.tielen@gmail.com
+copyright:           2019 Luc Tielen
+category:            Data
+extra-source-files:
+- README.md
+- LICENSE
+
+dependencies:
+  - base >= 3 && < 5
+  - validation >= 1.1
+
+# TODO cleanup
+ghc-options:
+  - -Wall
+  - -Weverything
+  - -Wno-safe
+  - -Wno-unsafe
+  - -Wno-missed-specializations
+  - -Wno-all-missed-specializations
+  - -Wno-missing-import-lists
+  - -Wno-type-defaults
+  - -Wno-missing-local-signatures
+  - -Wno-monomorphism-restriction
+  - -Wno-missing-deriving-strategies
+  - -optP-Wno-nonportable-include-path
+  - -fhide-source-paths
+  - -fno-show-valid-hole-fits
+  - -fno-sort-valid-hole-fits
+  - -O0
+
+library:
+  source-dirs:        lib
+
+tests:
+  validators-test:
+    main:             test.hs
+    source-dirs:      tests
+    dependencies:
+      - hspec >= 2.6.1 && < 3.0.0
+      - validators
+
