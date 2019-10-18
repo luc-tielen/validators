@@ -1,33 +1,11 @@
+module Data.Validation ( Validation(..) ) where
 
-module Data.Validation
-  ( Valid
-  , Validation
-  , Validator
-  , fromValid
-  , check
-  , validate
-  , runValidation
-  ) where
-
-import Prelude
-
-
--- | Wrapper type indicating this is a validated data type
-newtype Valid a = Valid { fromValid :: a }
-  deriving (Eq, Show)
-
-instance Functor Valid where
-  fmap f (Valid a) = Valid (f a)
-
-instance Applicative Valid where
-  pure = Valid
-
-  Valid f <*> Valid a = Valid $ f a
 
 -- | Used for combining multiple validators together
 data Validation e a
   = Failure e
   | Success a
+  deriving (Eq, Show)
 
 instance Functor (Validation e) where
   fmap _ (Failure e) = Failure e
@@ -40,34 +18,4 @@ instance Semigroup e => Applicative (Validation e) where
   Failure e1 <*> _ = Failure e1
   _ <*> Failure e2 = Failure e2
   Success f <*> Success a = Success $ f a
-
-data Result e = Ok | Err e
-  deriving (Eq, Show)
-
-instance Semigroup e => Semigroup (Result e) where
-  Ok <> Ok = Ok
-  (Err e1) <> (Err e2) = Err (e1 <> e2)
-  (Err e1) <> _ = Err e1
-  _ <> Err e2 = Err e2
-
--- TODO newtype?
-type Validator e a = a -> Result e
-
--- TODO rename to ifTrue / mkValidator
-check :: (a -> Bool) -> e -> Validator e a
-check p e a =
-  if p a
-    then Ok
-    else Err e
-
--- | Runs the validators on a single subject
-validate :: Validator e a -> a -> Validation e a
-validate f a = case f a of
-  Err e -> Failure e
-  Ok -> Success a
-
--- TODO rename
-runValidation :: Validation e a -> Either e (Valid a)
-runValidation (Failure e) = Left e
-runValidation (Success a) = Right $ Valid a
 
