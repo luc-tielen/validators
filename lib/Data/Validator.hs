@@ -1,11 +1,6 @@
-module Data.Validator
-  ( Validator
-  , validate
-  , check
-  ) where
+module Data.Validator (Validator, validate, check) where
 
 import Data.Validation
-
 
 data Result e = Ok | Err e
   deriving (Eq, Show)
@@ -18,7 +13,6 @@ instance Semigroup e => Semigroup (Result e) where
 
 instance Monoid e => Monoid (Result e) where
   mempty = Ok
-
 
 newtype Validator e a = Validator (a -> Result e)
 
@@ -37,4 +31,3 @@ validate (Validator f) a = case f a of
 -- TODO rename to ifTrue / mkValidator
 check :: (a -> Bool) -> e -> Validator e a
 check p e = Validator $ \a -> if p a then Ok else Err e
-

@@ -1,5 +1,4 @@
-module Data.Validation ( Validation(..) ) where
-
+module Data.Validation (Validation (..)) where
 
 -- | Used for combining multiple validators together
 data Validation e a
@@ -12,10 +11,10 @@ instance Functor (Validation e) where
   fmap f (Success a) = Success $ f a
 
 instance Semigroup e => Applicative (Validation e) where
+
   pure = Success
 
   Failure e1 <*> Failure e2 = Failure $ e1 <> e2
   Failure e1 <*> _ = Failure e1
   _ <*> Failure e2 = Failure e2
   Success f <*> Success a = Success $ f a
-
