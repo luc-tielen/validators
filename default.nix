@@ -1,4 +1,7 @@
-{ compiler ? "ghc865", pkgs ? import ./nix/packages.nix {} }:
+{ compiler ? "ghc865"
+, pkgs ? import ./nix/packages.nix {}
+, isDevBuild ? true
+}:
 
 with pkgs;
 
@@ -9,6 +12,10 @@ let
     inherit fetchFromGitHub;
     inherit (haskellPackages) callCabal2nix;
   };
+  devBuildInputs =
+    if isDevBuild
+      then with haskellPackages; [ hpack hlint ghcid ]
+      else [];
   drv = haskellPackages.callCabal2nix "validators" source {};
 in
   {
@@ -17,11 +24,8 @@ in
       packages = p: [ drv ];
       buildInputs = with haskellPackages; [
         cabal-install
-        hpack
-        hlint
-        ghcid
         ormolu
-      ];
-      withHoogle = true;
+      ] ++ devBuildInputs;
+      withHoogle = isDevBuild;
     };
   }

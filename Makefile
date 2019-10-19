@@ -6,7 +6,7 @@ configure:
 	@hpack .
 	@cabal new-configure
 
-test:
+tests:
 	@cabal new-run validators-test
 
 repl:
@@ -19,4 +19,8 @@ format:
 	@find lib tests -type f -name "*.hs" | \
 		xargs ormolu -m inplace
 
-.PHONY: build configure test repl lint format
+format_check:
+	@find lib tests -type f -name "*.hs" | \
+		xargs ormolu -m check
+
+.PHONY: build configure tests repl lint format format_check
