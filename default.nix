@@ -1,24 +1,26 @@
-{ compiler ? "ghc864", pkgs ? import ./nix/packages.nix {} }:
+{ compiler ? "ghc865", pkgs ? import ./nix/packages.nix {} }:
 
 with pkgs;
 
 let
   haskellPackages = haskell.packages.${compiler};
-  haskellPkgs = haskellPackages.override {
-    overrides = self: super: {};
-  };
   source = nix-gitignore.gitignoreSource [] ./.;
-  drv = haskellPkgs.callCabal2nix "validators" source {};
+  ormolu = callPackage ./nix/ormolu.nix {
+    inherit fetchFromGitHub;
+    inherit (haskellPackages) callCabal2nix;
+  };
+  drv = haskellPackages.callCabal2nix "validators" source {};
 in
   {
     validators = drv;
-    validators-shell = haskellPkgs.shellFor {
+    validators-shell = haskellPackages.shellFor {
       packages = p: [ drv ];
-      buildInputs = with haskellPkgs; [
+      buildInputs = with haskellPackages; [
         cabal-install
         hpack
         hlint
         ghcid
+        ormolu
       ];
       withHoogle = true;
     };

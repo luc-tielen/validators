@@ -15,4 +15,8 @@ repl:
 lint:
 	@hlint .
 
-.PHONY: build configure test repl lint
+format:
+	@find lib tests -type f -name "*.hs" | \
+		xargs ormolu -m inplace
+
+.PHONY: build configure test repl lint format
