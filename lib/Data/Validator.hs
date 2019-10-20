@@ -43,9 +43,11 @@ instance Semigroup err => Semigroup (Result err) where
   Err e1 <> Err e2 = Err $ e1 <> e2
   Err e1 <> _ = Err e1
   _ <> Err e2 = Err e2
+  {-# INLINE (<>) #-}
 
 instance Monoid err => Monoid (Result err) where
   mempty = Ok
+  {-# INLINE mempty #-}
 
 -- | Datatype for checking if a validation holds for a subject.
 --
@@ -62,9 +64,11 @@ newtype Validator err subject = Validator (subject -> Result err)
 
 instance Semigroup err => Semigroup (Validator err subject) where
   Validator v1 <> Validator v2 = Validator $ v1 <> v2
+  {-# INLINE (<>) #-}
 
 instance Monoid err => Monoid (Validator err subject) where
   mempty = Validator mempty
+  {-# INLINE mempty #-}
 
 -- | Runs a validator on a subject.
 --
@@ -74,6 +78,7 @@ validate :: Validator err subject -> subject -> Validation err subject
 validate (Validator f) a = case f a of
   Err e -> Failure e
   Ok -> Success a
+{-# INLINE validate #-}
 
 -- | Creates a validator that will return an error if the given predicate doesn't hold.
 --
@@ -87,6 +92,7 @@ validate (Validator f) a = case f a of
 -- Failure ["too small"]
 assert :: (subject -> Bool) -> err -> Validator err subject
 assert p err = Validator $ \subject -> if p subject then Ok else Err err
+{-# INLINE assert #-}
 
 -- | Creates a validator that will return an error if the given predicate holds.
 --
@@ -100,6 +106,7 @@ assert p err = Validator $ \subject -> if p subject then Ok else Err err
 -- Success 1
 refute :: (subject -> Bool) -> err -> Validator err subject
 refute p = assert (not . p)
+{-# INLINE refute #-}
 
 -- | Returns an error if a 'Maybe' is 'Nothing'.
 --
@@ -113,6 +120,7 @@ refute p = assert (not . p)
 -- Success (Just "Bob")
 ifNothing :: err -> Validator err (Maybe a)
 ifNothing = assert isJust
+{-# INLINE ifNothing #-}
 
 -- | Returns an error if an 'Either' contains a 'Left'.
 --
@@ -126,6 +134,7 @@ ifNothing = assert isJust
 -- Success (Right 456)
 ifLeft :: err -> Validator err (Either a b)
 ifLeft = assert isRight
+{-# INLINE ifLeft #-}
 
 -- | Helper typeclass for checking if a value is empty.
 -- Used in the 'ifEmpty' validator.
@@ -134,15 +143,19 @@ class IsEmpty a where
 
 instance IsEmpty [a] where
   isEmpty = null
+  {-# INLINE isEmpty #-}
 
 instance IsEmpty (Map k v) where
   isEmpty = Map.null
+  {-# INLINE isEmpty #-}
 
 instance IsEmpty (Set a) where
   isEmpty = Set.null
+  {-# INLINE isEmpty #-}
 
 instance IsEmpty (Seq a) where
   isEmpty = Seq.null
+  {-# INLINE isEmpty #-}
 
 -- | Returns an error if the function returns an "empty" value.
 --
@@ -166,12 +179,15 @@ class IsOnlyWhiteSpace a where
 
 instance IsOnlyWhiteSpace String where
   isOnlyWhiteSpace = null . words
+  {-# INLINE isOnlyWhiteSpace #-}
 
 instance IsOnlyWhiteSpace TL.Text where
   isOnlyWhiteSpace = null . TL.words
+  {-# INLINE isOnlyWhiteSpace #-}
 
 instance IsOnlyWhiteSpace T.Text where
   isOnlyWhiteSpace = null . T.words
+  {-# INLINE isOnlyWhiteSpace #-}
 
 -- | Returns an error if the function returns a value containing only whitespace.
 --
@@ -185,3 +201,4 @@ instance IsOnlyWhiteSpace T.Text where
 -- Success "not empty"
 ifBlank :: IsOnlyWhiteSpace subject => err -> Validator err subject
 ifBlank = refute isOnlyWhiteSpace
+{-# INLINE ifBlank #-}

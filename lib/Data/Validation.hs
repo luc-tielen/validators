@@ -20,15 +20,18 @@ data Validation err a
 instance Functor (Validation err) where
   fmap _ (Failure err) = Failure err
   fmap f (Success a) = Success (f a)
+  {-# INLINE fmap #-}
 
 instance Semigroup err => Applicative (Validation err) where
-
-  pure = Success
 
   Failure e1 <*> Failure e2 = Failure $ e1 <> e2
   Failure e1 <*> _ = Failure e1
   _ <*> Failure e2 = Failure e2
   Success f <*> Success a = Success (f a)
+  {-# INLINE (<*>) #-}
+
+  pure = Success
+  {-# INLINE pure #-}
 
 -- | Conversion function from 'Validation' to 'Either'.
 --
@@ -40,6 +43,7 @@ toEither :: Validation err a -> Either err a
 toEither v = case v of
   Failure e -> Left e
   Success a -> Right a
+{-# INLINE toEither #-}
 
 -- | Conversion function from 'Either' to 'Validation'.
 --
@@ -51,3 +55,4 @@ fromEither :: Either err a -> Validation err a
 fromEither e = case e of
   Left a -> Failure a
   Right b -> Success b
+{-# INLINE fromEither #-}
