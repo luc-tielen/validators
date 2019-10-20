@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 -- | This module defines the 'Validator' data type and helper functions
 --   for creating various validators.
 module Data.Validator
@@ -5,16 +7,32 @@ module Data.Validator
     validate,
     assert,
     refute,
+    ifNothing,
+    ifLeft,
+    IsEmpty (..),
+    ifEmpty,
+    IsOnlyWhiteSpace (..),
+    ifBlank,
   )
 where
 
+import Data.Either (isRight)
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.Maybe (isJust)
+import Data.Sequence (Seq)
+import qualified Data.Sequence as Seq
+import Data.Set (Set)
+import qualified Data.Set as Set
+import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
 import Data.Validation
 
 -- | Helper data type resembling the result of a 'Validator' assertion.
 --
 -- There are only 2 possible results:
--- 1. 'Ok': the validator assertion succeeded.
--- 2. 'Err': the validator assertion failed.
+-- 1. Ok: the validator assertion succeeded.
+-- 2. Err: the validator assertion failed.
 --
 -- Only used internally in the 'Validator' type to keep track of accumulated errors.
 data Result err = Ok | Err err
@@ -82,3 +100,88 @@ assert p err = Validator $ \subject -> if p subject then Ok else Err err
 -- Success 1
 refute :: (subject -> Bool) -> err -> Validator err subject
 refute p = assert (not . p)
+
+-- | Returns an error if a 'Maybe' is 'Nothing'.
+--
+-- Usage:
+--
+-- >>> let validator = ifNothing id ["Found nothing."]
+-- >>> validate validator Nothing
+-- Failure ["Found nothing."]
+--
+-- >>> validate validator (Just "Bob")
+-- Success (Just "Bob")
+ifNothing :: (subject -> Maybe a) -> err -> Validator err subject
+ifNothing f = assert (isJust . f)
+
+-- | Returns an error if an 'Either' contains a 'Left'.
+--
+-- Usage:
+--
+-- >>> let validator = ifLeft id ["Found left."]
+-- >>> validate validator (Left 123)
+-- Failure ["Found left."]
+--
+-- >>> validate validator (Right 456)
+-- Success (Right 456)
+ifLeft :: (subject -> Either a b) -> err -> Validator err subject
+ifLeft f = assert (isRight . f)
+
+-- | Helper typeclass for checking if a value is empty.
+-- Used in the 'ifEmpty' validator.
+class IsEmpty a where
+  isEmpty :: a -> Bool
+
+instance IsEmpty [a] where
+  isEmpty = null
+
+instance IsEmpty (Map k v) where
+  isEmpty = Map.null
+
+instance IsEmpty (Set a) where
+  isEmpty = Set.null
+
+instance IsEmpty (Seq a) where
+  isEmpty = Seq.null
+
+-- | Returns an error if the function returns an "empty" value.
+--
+-- Usage:
+--
+-- >>> let validator = ifEmpty id ["Empty."]
+-- >>> validate validator []
+-- Failure ["Empty."]
+--
+-- >>> validate validator [1, 2, 3]
+-- Success [1,2,3]
+-- >>> validate validator (Map.fromList [('a', 1), ('b', 2)])
+-- Success (fromList [('a',1),('b',2)])
+ifEmpty :: IsEmpty a => (subject -> a) -> err -> Validator err subject
+ifEmpty f = refute (isEmpty . f)
+
+-- | Helper typeclass for checking if a value contains only whitespace characters.
+-- Used in the 'ifBlank validator.
+class IsOnlyWhiteSpace a where
+  isOnlyWhiteSpace :: a -> Bool
+
+instance IsOnlyWhiteSpace String where
+  isOnlyWhiteSpace = null . words
+
+instance IsOnlyWhiteSpace TL.Text where
+  isOnlyWhiteSpace = null . TL.words
+
+instance IsOnlyWhiteSpace T.Text where
+  isOnlyWhiteSpace = null . T.words
+
+-- | Returns an error if the function returns a value containing only whitespace.
+--
+-- Usage:
+--
+-- >>> let validator = ifBlank id ["Only whitespace."]
+-- >>> validate validator "   \t \n \r "
+-- Failure ["Only whitespace."]
+--
+-- >>> validate validator "not empty"
+-- Success "not empty"
+ifBlank :: IsOnlyWhiteSpace a => (subject -> a) -> err -> Validator err subject
+ifBlank f = refute (isOnlyWhiteSpace . f)

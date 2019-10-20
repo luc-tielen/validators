@@ -15,7 +15,7 @@ where
 data Validation err a
   = Failure err
   | Success a
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
 instance Functor (Validation err) where
   fmap _ (Failure err) = Failure err

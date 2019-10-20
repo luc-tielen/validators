@@ -12,6 +12,8 @@ extra-source-files:
 
 dependencies:
   - base >= 3 && < 5
+  - containers == 0.*
+  - text == 1.*
 
 # TODO cleanup
 ghc-options:
