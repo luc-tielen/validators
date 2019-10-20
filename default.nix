@@ -14,7 +14,7 @@ let
   };
   devBuildInputs =
     if isDevBuild
-      then with haskellPackages; [ hpack hlint ghcid ]
+      then with haskellPackages; [ hpack ghcid ]
       else [];
   drv = haskellPackages.callCabal2nix "validators" source {};
 in
@@ -24,6 +24,7 @@ in
       packages = p: [ drv ];
       buildInputs = with haskellPackages; [
         cabal-install
+        hlint
         ormolu
       ] ++ devBuildInputs;
       withHoogle = isDevBuild;
