@@ -105,27 +105,27 @@ refute p = assert (not . p)
 --
 -- Usage:
 --
--- >>> let validator = ifNothing id ["Found nothing."]
+-- >>> let validator = ifNothing ["Found nothing."]
 -- >>> validate validator Nothing
 -- Failure ["Found nothing."]
 --
 -- >>> validate validator (Just "Bob")
 -- Success (Just "Bob")
-ifNothing :: (subject -> Maybe a) -> err -> Validator err subject
-ifNothing f = assert (isJust . f)
+ifNothing :: err -> Validator err (Maybe a)
+ifNothing = assert isJust
 
 -- | Returns an error if an 'Either' contains a 'Left'.
 --
 -- Usage:
 --
--- >>> let validator = ifLeft id ["Found left."]
+-- >>> let validator = ifLeft ["Found left."]
 -- >>> validate validator (Left 123)
 -- Failure ["Found left."]
 --
 -- >>> validate validator (Right 456)
 -- Success (Right 456)
-ifLeft :: (subject -> Either a b) -> err -> Validator err subject
-ifLeft f = assert (isRight . f)
+ifLeft :: err -> Validator err (Either a b)
+ifLeft = assert isRight
 
 -- | Helper typeclass for checking if a value is empty.
 -- Used in the 'ifEmpty' validator.
@@ -148,7 +148,7 @@ instance IsEmpty (Seq a) where
 --
 -- Usage:
 --
--- >>> let validator = ifEmpty id ["Empty."]
+-- >>> let validator = ifEmpty ["Empty."]
 -- >>> validate validator []
 -- Failure ["Empty."]
 --
@@ -156,8 +156,8 @@ instance IsEmpty (Seq a) where
 -- Success [1,2,3]
 -- >>> validate validator (Map.fromList [('a', 1), ('b', 2)])
 -- Success (fromList [('a',1),('b',2)])
-ifEmpty :: IsEmpty a => (subject -> a) -> err -> Validator err subject
-ifEmpty f = refute (isEmpty . f)
+ifEmpty :: IsEmpty subject => err -> Validator err subject
+ifEmpty = refute isEmpty
 
 -- | Helper typeclass for checking if a value contains only whitespace characters.
 -- Used in the 'ifBlank validator.
@@ -177,11 +177,11 @@ instance IsOnlyWhiteSpace T.Text where
 --
 -- Usage:
 --
--- >>> let validator = ifBlank id ["Only whitespace."]
+-- >>> let validator = ifBlank ["Only whitespace."]
 -- >>> validate validator "   \t \n \r "
 -- Failure ["Only whitespace."]
 --
 -- >>> validate validator "not empty"
 -- Success "not empty"
-ifBlank :: IsOnlyWhiteSpace a => (subject -> a) -> err -> Validator err subject
-ifBlank f = refute (isOnlyWhiteSpace . f)
+ifBlank :: IsOnlyWhiteSpace subject => err -> Validator err subject
+ifBlank = refute isOnlyWhiteSpace
