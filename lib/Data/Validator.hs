@@ -56,12 +56,28 @@ validate (Validator f) a = case f a of
 
 {-| Creates a validator that will return an error if the given predicate doesn't hold.
 
+Usage:
+
+>>> let validator = assert (> 10) ["too small"]
+>>> validate validator 11
+Success 11
+
+>>> validate validator 1
+Failure ["too small"]
 -}
 assert :: (subject -> Bool) -> err -> Validator err subject
 assert p err = Validator $ \subject -> if p subject then Ok else Err err
 
 {-| Creates a validator that will return an error if the given predicate holds.
 
+Usage:
+
+>>> let validator = refute (> 10) ["too big"]
+>>> validate validator 11
+Failure ["too big"]
+
+>>> validate validator 1
+Success 1
 -}
 refute :: (subject -> Bool) -> err -> Validator err subject
 refute p = assert (not . p)

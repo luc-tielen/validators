@@ -26,9 +26,3 @@ spec = describe "Validators" $ parallel $ do
       validate validator 7 ==> Success 7
       validate validator 6 ==> Failure [WrongNumber]
       validate validator 11 ==> Failure [TooBig, WrongNumber]
-
-  -- TODO move to doctest
-  it "can check if a predicate is not satisfied using 'refute'" $ do
-    let validator = refute (> 10) [TooBig]
-    validate validator 11 ==> Failure [TooBig]
-    validate validator 1 ==> Success 1

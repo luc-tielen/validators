@@ -6,8 +6,13 @@ configure:
 	@hpack .
 	@cabal new-configure
 
-tests:
+tests: unit_tests doc_tests
+
+unit_tests:
 	@cabal new-run validators-test
+
+doc_tests:
+	@cabal new-run validators-doctest
 
 repl:
 	@cabal new-repl
@@ -26,4 +31,4 @@ format_check:
 docs:
 	@cabal new-haddock
 
-.PHONY: build configure tests repl lint format format_check docs
+.PHONY: build configure tests unit_tests doc_tests repl lint format format_check docs

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0f89165273753493fa2b7a8a8aac93a021ed638441caa013338224f826d49843
+-- hash: fe579cb5ec952992f607610776f145ea70e7c757a07cf4e014e2af3d400a9f05
 
 name:           validators
 version:        0.0.1
@@ -31,6 +31,24 @@ library
   ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
   build-depends:
       base >=3 && <5
+  default-language: Haskell2010
+
+test-suite validators-doctest
+  type: exitcode-stdio-1.0
+  main-is: doctest.hs
+  other-modules:
+      Data.ValidationSpec
+      Data.ValidatorSpec
+      Paths_validators
+  hs-source-dirs:
+      tests
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -threaded
+  build-depends:
+      Glob >=0.10.0 && <1
+    , base >=3 && <5
+    , doctest >=0.16.2 && <1
+    , hspec >=2.6.1 && <3.0.0
+    , validators
   default-language: Haskell2010
 
 test-suite validators-test
