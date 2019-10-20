@@ -23,4 +23,7 @@ format_check:
 	@find lib tests -type f -name "*.hs" | \
 		xargs ormolu -m check
 
-.PHONY: build configure tests repl lint format format_check
+docs:
+	@cabal new-haddock
+
+.PHONY: build configure tests repl lint format format_check docs

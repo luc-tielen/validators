@@ -13,15 +13,22 @@ data Error = TooSmall | TooBig | WrongNumber
   deriving (Eq, Show)
 
 spec :: Spec
-spec = describe "Running validators" $ parallel $ do
-  it "can run single validation on a subject" $ do
-    let validator = check (> 10) [TooSmall]
-    validate validator 11 ==> Success 11
-    validate validator 1 ==> Failure [TooSmall]
-  it "can run multiple validations on a subject" $ do
-    let validator =
-          check (< 10) [TooBig]
-            <> check (== 7) [WrongNumber]
-    validate validator 7 ==> Success 7
-    validate validator 6 ==> Failure [WrongNumber]
-    validate validator 11 ==> Failure [TooBig, WrongNumber]
+spec = describe "Validators" $ parallel $ do
+  describe "Running validators" $ parallel $ do
+    it "can run single validation on a subject" $ do
+      let validator = assert (> 10) [TooSmall]
+      validate validator 11 ==> Success 11
+      validate validator 1 ==> Failure [TooSmall]
+    it "can run multiple validations on a subject" $ do
+      let validator =
+            assert (< 10) [TooBig]
+              <> assert (== 7) [WrongNumber]
+      validate validator 7 ==> Success 7
+      validate validator 6 ==> Failure [WrongNumber]
+      validate validator 11 ==> Failure [TooBig, WrongNumber]
+
+  -- TODO move to doctest
+  it "can check if a predicate is not satisfied using 'refute'" $ do
+    let validator = refute (> 10) [TooBig]
+    validate validator 11 ==> Failure [TooBig]
+    validate validator 1 ==> Success 1

@@ -1,33 +1,67 @@
-module Data.Validator (Validator, validate, check) where
+-- | This module defines the 'Validator' data type and helper functions
+--   for creating various validators.
+module Data.Validator (Validator, validate, assert, refute) where
 
 import Data.Validation
 
-data Result e = Ok | Err e
+{-| Helper data type for keeping track of errors.
+
+Only used internally in the 'Validator' type to keep track of accumulated errors.
+-}
+data Result err
+  = Ok
+  -- ^ Validator returned no error.
+  | Err err
+  -- ^ Validator returned an error.
   deriving (Eq, Show)
 
-instance Semigroup e => Semigroup (Result e) where
+instance Semigroup err => Semigroup (Result err) where
   Ok <> Ok = Ok
   Err e1 <> Err e2 = Err $ e1 <> e2
   Err e1 <> _ = Err e1
   _ <> Err e2 = Err e2
 
-instance Monoid e => Monoid (Result e) where
+instance Monoid err => Monoid (Result err) where
   mempty = Ok
 
-newtype Validator e a = Validator (a -> Result e)
+{-| Datatype for checking if a validation holds for a subject.
 
-instance Semigroup e => Semigroup (Validator e a) where
+- __subject__ can be any data type for which assertions need to be checked.
+- __err__ can be any type representing an error, but it will only be possible to
+combine validators if the error type has a Semigroup instance.
+
+Execute a validator by passing it to the 'validate' function.
+
+A Validator is both a 'Semigroup' and a 'Monoid', making it possible to combine
+smaller validators into larger validators. A combined validator will accumulate
+errors from all of it's sub-validators.
+-}
+newtype Validator err subject = Validator (subject -> Result err)
+
+instance Semigroup err => Semigroup (Validator err subject) where
   Validator v1 <> Validator v2 = Validator $ v1 <> v2
 
-instance Monoid e => Monoid (Validator e a) where
+instance Monoid err => Monoid (Validator err subject) where
   mempty = Validator mempty
 
--- | Runs the validators on a single subject
-validate :: Validator e a -> a -> Validation e a
+{-| Runs a validator on a subject.
+
+The result is a 'Validation' containing all accumulated errors,
+or the subject wrapped in a 'Success' value.
+-}
+validate :: Validator err subject -> subject -> Validation err subject
 validate (Validator f) a = case f a of
   Err e -> Failure e
   Ok -> Success a
 
--- TODO rename to ifTrue / mkValidator
-check :: (a -> Bool) -> e -> Validator e a
-check p e = Validator $ \a -> if p a then Ok else Err e
+{-| Creates a validator that will return an error if the given predicate doesn't hold.
+
+-}
+assert :: (subject -> Bool) -> err -> Validator err subject
+assert p err = Validator $ \subject -> if p subject then Ok else Err err
+
+{-| Creates a validator that will return an error if the given predicate holds.
+
+-}
+refute :: (subject -> Bool) -> err -> Validator err subject
+refute p = assert (not . p)
