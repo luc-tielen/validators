@@ -12,5 +12,5 @@ jobs:
             nix-env -iA cachix -f https://cachix.org/api/v1/install
             USER=$(whoami) cachix use luctielen
             nix-shell --arg isDevBuild "false" --option sandbox false --run "make configure tests"
-            nix-shell --arg isDevBuild "false" --option sandbox false --run "cabal new-build lib:validators"
             nix-shell --arg isDevBuild "false" --option sandbox false --run "make lint format_check"
+            nix-shell --arg isDevBuild "false" --option sandbox false --run "make docs"
