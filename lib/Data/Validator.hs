@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE FlexibleInstances #-}
 
 -- | This module defines the 'Validator' data type and helper functions
@@ -37,7 +38,7 @@ import Data.Validation
 -- 2. Err: the validator assertion failed.
 --
 -- Only used internally in the 'Validator' type to keep track of accumulated errors.
-data Result err = Ok | Err err
+data Result err = Ok | Err !err
   deriving (Eq, Show)
 
 instance Semigroup err => Semigroup (Result err) where
@@ -147,12 +148,14 @@ ifLeft = assert isRight
 -- | Helper typeclass for checking if a value is empty.
 -- Used in the 'ifEmpty' validator.
 class HasSize a where
+
   size :: a -> Int
 
   isEmpty :: a -> Bool
   isEmpty = (== 0) . size
 
 instance HasSize [a] where
+
   size = length
   {-# INLINE size #-}
 
@@ -160,6 +163,7 @@ instance HasSize [a] where
   {-# INLINE isEmpty #-}
 
 instance HasSize (Map k v) where
+
   size = Map.size
   {-# INLINE size #-}
 
@@ -167,6 +171,7 @@ instance HasSize (Map k v) where
   {-# INLINE isEmpty #-}
 
 instance HasSize (Set a) where
+
   size = Set.size
   {-# INLINE size #-}
 
@@ -174,6 +179,7 @@ instance HasSize (Set a) where
   {-# INLINE isEmpty #-}
 
 instance HasSize (Seq a) where
+
   size = Seq.length
   {-# INLINE size #-}
 
@@ -254,4 +260,3 @@ instance IsOnlyWhiteSpace T.Text where
 ifBlank :: IsOnlyWhiteSpace subject => err -> Validator err subject
 ifBlank = refute isOnlyWhiteSpace
 {-# INLINE ifBlank #-}
-

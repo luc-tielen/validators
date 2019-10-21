@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+
 -- | This module defines the 'Validation' data type.
 module Data.Validation
   ( Validation (..),
@@ -13,8 +15,8 @@ where
 -- A complete example where Validation is used can be found
 -- <https://github.com/luc-tielen/validators.git here>.
 data Validation err a
-  = Failure err
-  | Success a
+  = Failure !err
+  | Success !a
   deriving (Eq, Show, Ord)
 
 instance Functor (Validation err) where
