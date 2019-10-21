@@ -6,6 +6,13 @@
 A library for validating input data in Haskell, inspired partly by [elm-validate](https://github.com/rtfeldman/elm-validate/).
 
 
+## Motivating example
+
+errors in set
+
+TODO json person example
+
+
 ## Concepts
 
 ### Validator
@@ -42,8 +49,6 @@ resulting in a validator that accumulates errors from both sub-validators:
 
 The library provides helper functions for commonly used validation checks.
 See the docs for a complete overview which validators are available.
-Custom validation checks can be created using the low-level `assert`/`refute`
-functions.
 
 
 ### Validation

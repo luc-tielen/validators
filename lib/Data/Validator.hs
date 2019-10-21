@@ -9,8 +9,10 @@ module Data.Validator
     refute,
     ifNothing,
     ifLeft,
-    IsEmpty (..),
+    HasSize (..),
     ifEmpty,
+    minSize,
+    maxSize,
     IsOnlyWhiteSpace (..),
     ifBlank,
   )
@@ -82,6 +84,9 @@ validate (Validator f) a = case f a of
 
 -- | Creates a validator that will return an error if the given predicate doesn't hold.
 --
+-- Since any predicate can be provided for checking if the subject satisfies
+-- certain conditions, this can be used to build your own custom validators.
+--
 -- Usage:
 --
 -- >>> let validator = assert (> 10) ["too small"]
@@ -95,6 +100,9 @@ assert p err = Validator $ \subject -> if p subject then Ok else Err err
 {-# INLINE assert #-}
 
 -- | Creates a validator that will return an error if the given predicate holds.
+--
+-- Since any predicate can be provided for checking if the subject satisfies
+-- certain conditions, this can be used to build your own custom validators.
 --
 -- Usage:
 --
@@ -138,22 +146,37 @@ ifLeft = assert isRight
 
 -- | Helper typeclass for checking if a value is empty.
 -- Used in the 'ifEmpty' validator.
-class IsEmpty a where
-  isEmpty :: a -> Bool
+class HasSize a where
+  size :: a -> Int
 
-instance IsEmpty [a] where
+  isEmpty :: a -> Bool
+  isEmpty = (== 0) . size
+
+instance HasSize [a] where
+  size = length
+  {-# INLINE size #-}
+
   isEmpty = null
   {-# INLINE isEmpty #-}
 
-instance IsEmpty (Map k v) where
+instance HasSize (Map k v) where
+  size = Map.size
+  {-# INLINE size #-}
+
   isEmpty = Map.null
   {-# INLINE isEmpty #-}
 
-instance IsEmpty (Set a) where
+instance HasSize (Set a) where
+  size = Set.size
+  {-# INLINE size #-}
+
   isEmpty = Set.null
   {-# INLINE isEmpty #-}
 
-instance IsEmpty (Seq a) where
+instance HasSize (Seq a) where
+  size = Seq.length
+  {-# INLINE size #-}
+
   isEmpty = Seq.null
   {-# INLINE isEmpty #-}
 
@@ -169,8 +192,37 @@ instance IsEmpty (Seq a) where
 -- Success [1,2,3]
 -- >>> validate validator (Map.fromList [('a', 1), ('b', 2)])
 -- Success (fromList [('a',1),('b',2)])
-ifEmpty :: IsEmpty subject => err -> Validator err subject
+ifEmpty :: HasSize subject => err -> Validator err subject
 ifEmpty = refute isEmpty
+{-# INLINE ifEmpty #-}
+
+-- | Returns an error if the value has a size smaller than required.
+--
+-- Usage:
+--
+-- >>> let validator = minSize 3 ["Too small."]
+-- >>> validate validator []
+-- Failure ["Too small."]
+-- >>> validate validator [1, 2]
+-- Failure ["Too small."]
+-- >>> validate validator [1, 2, 3]
+-- Success [1,2,3]
+minSize :: HasSize subject => Int -> err -> Validator err subject
+minSize x = refute ((< x) . size)
+{-# INLINE minSize #-}
+
+-- | Returns an error if the value has a size smaller than required.
+--
+-- Usage:
+--
+-- >>> let validator = maxSize 3 ["Too big."]
+-- >>> validate validator [1, 2, 3, 4]
+-- Failure ["Too big."]
+-- >>> validate validator [1, 2, 3]
+-- Success [1,2,3]
+maxSize :: HasSize subject => Int -> err -> Validator err subject
+maxSize x = refute ((> x) . size)
+{-# INLINE maxSize #-}
 
 -- | Helper typeclass for checking if a value contains only whitespace characters.
 -- Used in the 'ifBlank validator.
@@ -202,3 +254,4 @@ instance IsOnlyWhiteSpace T.Text where
 ifBlank :: IsOnlyWhiteSpace subject => err -> Validator err subject
 ifBlank = refute isOnlyWhiteSpace
 {-# INLINE ifBlank #-}
+
