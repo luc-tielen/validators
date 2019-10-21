@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE FlexibleInstances #-}
 
 -- | This module defines the 'Validator' data type and helper functions
@@ -20,6 +19,7 @@ module Data.Validator
 where
 
 import Data.Either (isRight)
+import Data.Functor.Contravariant
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Maybe (isJust)
@@ -72,6 +72,10 @@ instance Semigroup err => Semigroup (Validator err subject) where
 instance Monoid err => Monoid (Validator err subject) where
   mempty = Validator mempty
   {-# INLINE mempty #-}
+
+instance Contravariant (Validator err) where
+  contramap f (Validator g) = Validator (g . f)
+  {-# INLINE contramap #-}
 
 -- | Runs a validator on a subject.
 --
@@ -146,7 +150,6 @@ ifLeft = assert isRight
 {-# INLINE ifLeft #-}
 
 -- | Helper typeclass for checking if a value is empty.
--- Used in the 'ifEmpty' validator.
 class HasSize a where
 
   size :: a -> Int
@@ -211,6 +214,7 @@ ifEmpty = refute isEmpty
 -- Failure ["Too small."]
 -- >>> validate validator [1, 2]
 -- Failure ["Too small."]
+--
 -- >>> validate validator [1, 2, 3]
 -- Success [1,2,3]
 minSize :: HasSize subject => Int -> err -> Validator err subject
@@ -224,6 +228,7 @@ minSize x = refute ((< x) . size)
 -- >>> let validator = maxSize 3 ["Too big."]
 -- >>> validate validator [1, 2, 3, 4]
 -- Failure ["Too big."]
+--
 -- >>> validate validator [1, 2, 3]
 -- Success [1,2,3]
 maxSize :: HasSize subject => Int -> err -> Validator err subject
@@ -231,7 +236,6 @@ maxSize x = refute ((> x) . size)
 {-# INLINE maxSize #-}
 
 -- | Helper typeclass for checking if a value contains only whitespace characters.
--- Used in the 'ifBlank validator.
 class IsOnlyWhiteSpace a where
   isOnlyWhiteSpace :: a -> Bool
 
