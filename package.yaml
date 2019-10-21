@@ -15,23 +15,16 @@ dependencies:
   - containers == 0.*
   - text == 1.*
 
-# TODO cleanup
 ghc-options:
   - -Wall
   - -Weverything
   - -Wno-implicit-prelude
-  - -Wno-safe
-  - -Wno-unsafe
-  - -Wno-missed-specializations
-  - -Wno-all-missed-specializations
   - -Wno-missing-import-lists
-  - -Wno-type-defaults
-  - -Wno-missing-local-signatures
-  - -Wno-monomorphism-restriction
   - -optP-Wno-nonportable-include-path
   - -fhide-source-paths
   - -fno-show-valid-hole-fits
   - -fno-sort-valid-hole-fits
+  - -O2
 
 library:
   source-dirs:        lib

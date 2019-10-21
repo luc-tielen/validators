@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5432e59ee628f39e843eb1dbb1cc100e4032de8595259ac2126c8d595ccc5819
+-- hash: f6850a78cbdd5c5195a3e445e2fd49ff4169027f91c507963f1b3eb131e766f4
 
 name:           validators
 version:        0.0.1
@@ -28,7 +28,7 @@ library
       Paths_validators
   hs-source-dirs:
       lib
-  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O2
   build-depends:
       base >=4.12 && <5
     , containers ==0.*
@@ -44,12 +44,12 @@ test-suite validators-doctest
       Paths_validators
   hs-source-dirs:
       tests
-  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -threaded
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O2 -threaded
   build-depends:
       Glob >=0.10.0 && <1
     , base >=4.12 && <5
     , containers ==0.*
-    , doctest >=0.16.2 && <1
+    , doctest >=0.16.1 && <1
     , hspec >=2.6.1 && <3.0.0
     , text ==1.*
     , validators
@@ -64,7 +64,7 @@ test-suite validators-test
       Paths_validators
   hs-source-dirs:
       tests
-  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missed-specializations -Wno-all-missed-specializations -Wno-missing-import-lists -Wno-type-defaults -Wno-missing-local-signatures -Wno-monomorphism-restriction -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O2
   build-depends:
       base >=4.12 && <5
     , containers ==0.*
