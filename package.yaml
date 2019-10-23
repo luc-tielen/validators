@@ -9,6 +9,7 @@ copyright:           2019 Luc Tielen
 category:            Data
 extra-source-files:
 - README.md
+- CHANGELOG.md
 - LICENSE
 
 dependencies:

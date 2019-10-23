@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c9824cc76235faeed1cf91fa6234c791d724e63816d649473db1ac1e87e89b2e
+-- hash: b552cd85f99093a4df5d8d22c5b6102b21e49bbdeffa1abe6503e573577a04e9
 
 name:           validators
 version:        0.0.1
@@ -19,6 +19,7 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
+    CHANGELOG.md
     LICENSE
 
 library
