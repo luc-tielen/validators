@@ -1,4 +1,9 @@
 -- | This module defines the 'Validation' data type.
+--
+-- Most functionality is the same as in the
+-- <http://hackage.haskell.org/package/validation-1.1 validation> library,
+-- but the module doesn't provide certain typeclass instances that require
+-- a dependency on the lens library.
 module Data.Validation
   ( Validation (..),
     toEither,
@@ -16,6 +21,7 @@ import Data.Bitraversable
 --
 -- A complete example where Validation is used can be found
 -- <https://github.com/luc-tielen/validators.git here>.
+--
 data Validation err a
   = Failure !err
   | Success !a

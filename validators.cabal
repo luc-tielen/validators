@@ -4,10 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f6850a78cbdd5c5195a3e445e2fd49ff4169027f91c507963f1b3eb131e766f4
+-- hash: 3c8cd411851b1bcee5bc579a52383826027130da9aa0384fd148d7aa9ec63741
 
 name:           validators
 version:        0.0.1
+synopsis:       Composable validations for your Haskell data types
 category:       Data
 homepage:       https://github.com/luc-tielen/validators#README.md
 author:         Luc Tielen

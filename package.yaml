@@ -1,4 +1,5 @@
 name:                validators
+synopsis:            Composable validations for your Haskell data types
 version:             0.0.1
 homepage:            https://github.com/luc-tielen/validators#README.md
 license:             MIT
