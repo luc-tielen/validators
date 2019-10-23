@@ -25,7 +25,6 @@ ghc-options:
   - -fhide-source-paths
   - -fno-show-valid-hole-fits
   - -fno-sort-valid-hole-fits
-  - -O2
 
 library:
   source-dirs:        lib

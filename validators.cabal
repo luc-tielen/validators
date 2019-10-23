@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3c8cd411851b1bcee5bc579a52383826027130da9aa0384fd148d7aa9ec63741
+-- hash: c9824cc76235faeed1cf91fa6234c791d724e63816d649473db1ac1e87e89b2e
 
 name:           validators
 version:        0.0.1
@@ -29,7 +29,7 @@ library
       Paths_validators
   hs-source-dirs:
       lib
-  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O2
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
   build-depends:
       base >=4.12 && <5
     , containers ==0.*
@@ -45,7 +45,7 @@ test-suite validators-doctest
       Paths_validators
   hs-source-dirs:
       tests
-  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O2 -threaded
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -threaded
   build-depends:
       Glob >=0.10.0 && <1
     , base >=4.12 && <5
@@ -65,7 +65,7 @@ test-suite validators-test
       Paths_validators
   hs-source-dirs:
       tests
-  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits -O2
+  ghc-options: -Wall -Weverything -Wno-implicit-prelude -Wno-missing-import-lists -optP-Wno-nonportable-include-path -fhide-source-paths -fno-show-valid-hole-fits -fno-sort-valid-hole-fits
   build-depends:
       base >=4.12 && <5
     , containers ==0.*
