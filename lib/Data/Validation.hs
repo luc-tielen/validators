@@ -21,7 +21,6 @@ import Data.Bitraversable
 --
 -- A complete example where Validation is used can be found
 -- <https://github.com/luc-tielen/validators.git here>.
---
 data Validation err a
   = Failure !err
   | Success !a
