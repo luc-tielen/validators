@@ -2,6 +2,7 @@
 # Validators
 
 [![CircleCI](https://circleci.com/gh/luc-tielen/validators.svg?style=svg)](https://circleci.com/gh/luc-tielen/validators)
+[![Hackage](https://img.shields.io/hackage/v/validators.svg)](https://hackage.haskell.org/package/validators)
 
 A library for validating input data in Haskell, inspired partly by [elm-validate](https://github.com/rtfeldman/elm-validate/).
 
@@ -71,7 +72,7 @@ data Person = Person Name Age
 ```
 
 
-## Developing
+## Contributing
 
 The easiest way to start developing is by using [Nix](https://nixos.org/nix/download.html).
 
